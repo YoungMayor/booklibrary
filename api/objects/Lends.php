@@ -1,5 +1,7 @@
 <?php
 
+namespace Object;
+
 class Lends{
   private $conn;
   private $table_name = "lend_outs";

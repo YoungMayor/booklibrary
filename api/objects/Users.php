@@ -1,5 +1,7 @@
 <?php
 
+namespace Object;
+
 class Users{
   private $conn;
   private $table_name = "users";

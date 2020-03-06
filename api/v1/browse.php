@@ -1,7 +1,9 @@
 <?php
-require_once "../config/database.php";
-require_once "../objects/Books.php";
-require_once "../objects/Users.php";
+require_once "autoload.php";
+use Config\Database;
+use Object\Books;
+use Object\Lends;
+use Object\Users;
 
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");

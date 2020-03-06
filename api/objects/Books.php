@@ -1,5 +1,7 @@
 <?php
 
+namespace Object;
+
 class Books{
   private $conn;
   private $table_name = "books";

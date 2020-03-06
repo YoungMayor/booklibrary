@@ -1,5 +1,7 @@
 <?php
 
+namespace Config;
+
 class Database{
   private $host = "localhost";
   private $db_name = "api_bklib";
@@ -12,7 +14,7 @@ class Database{
     $this->conn = NULL;
 
     try{
-      $this->conn = new PDO("mysql:host=".$this->host.";dbname=".$this->db_name, $this->username, $this->password);
+      $this->conn = new \PDO("mysql:host=".$this->host.";dbname=".$this->db_name, $this->username, $this->password);
       $this->conn->exec("set names utf8");
     } catch (PDOException $exception){
       echo "Connection error: ".$exception->getMessage();
