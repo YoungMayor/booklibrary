@@ -9,5 +9,14 @@
       "Object\\" : "objects/",
       "Config\\" : "config/"
     }
+  },
+
+  "config": {
+    "optimize-autoloader": true
+  },
+
+  "scripts": {
+    "test_f": "/vendor/bin/phpunit",
+    "test_b": ".\\vendor\\bin\\phpunit"
   }
 }

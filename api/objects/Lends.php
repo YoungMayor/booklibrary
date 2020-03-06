@@ -1,6 +1,7 @@
 <?php
 
 namespace Object;
+use \PDO;
 
 class Lends{
   private $conn;
@@ -12,13 +13,17 @@ class Lends{
     $this->conn = $db;
   }
 
+  protected function sanitizeProperties(){
+    $this->bookID = htmlspecialchars(strip_tags($this->bookID));
+    $this->recipentID = htmlspecialchars(strip_tags($this->recipentID));
+  }
+
   public function logLendOut(){
     $query = "INSERT INTO {$this->table_name} SET book_id = :book_id, recipent_id = :recipent_id";
     $stmt = $this->conn->prepare($query);
 
       // sanitize inputs
-    $this->bookID = htmlspecialchars(strip_tags($this->bookID));
-    $this->recipentID = htmlspecialchars(strip_tags($this->recipentID));;
+    $this->sanitizeProperties();
 
       // bind values
     $stmt->bindParam(":book_id", $this->bookID);
@@ -34,8 +39,7 @@ class Lends{
     $stmt = $this->conn->prepare($query);
 
       // sanitize inputs
-    $this->bookID = htmlspecialchars(strip_tags($this->bookID));
-    $this->recipentID = htmlspecialchars(strip_tags($this->recipentID));;
+    $this->sanitizeProperties();
 
       // bind values
     $stmt->bindParam(":now", $now);
@@ -51,15 +55,11 @@ class Lends{
     $stmt = $this->conn->prepare($query);
 
       // sanitize inputs
-    $this->bookID = htmlspecialchars(strip_tags($this->bookID));
-    $this->recipentID = htmlspecialchars(strip_tags($this->recipentID));;
+    $this->sanitizeProperties();
 
       // bind values
     $stmt->bindParam(":book_id", $this->bookID);
     $stmt->bindParam(":recipent_id", $this->recipentID);
-    // print_r($stmt);
-    print_r($this->bookID);
-    print_r($this->recipentID);
 
       // execute query
     $stmt->execute();

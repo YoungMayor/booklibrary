@@ -1,6 +1,7 @@
 <?php
 
 namespace Object;
+use \PDO;
 
 class Books{
   private $conn;
@@ -13,9 +14,16 @@ class Books{
     $this->conn = $db;
   }
 
+  protected function sanitizeProperties(){
+    $this->isbn = htmlspecialchars(strip_tags($this->isbn));
+    $this->title = htmlspecialchars(strip_tags($this->title));
+    $this->author = htmlspecialchars(strip_tags($this->author));
+    $this->description = htmlspecialchars(strip_tags($this->description));
+  }
+
   public function listAvailable(){
     $query = "SELECT * FROM {$this->table_name} WHERE in_stock > 0 ORDER BY id DESC";
-    // echo $query;
+
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
     return $stmt;
@@ -83,10 +91,7 @@ class Books{
       $stmt = $this->conn->prepare($query);
 
       // sanitize inputs
-      $this->isbn = htmlspecialchars(strip_tags($this->isbn));
-      $this->title = htmlspecialchars(strip_tags($this->title));
-      $this->author = htmlspecialchars(strip_tags($this->author));
-      $this->description = htmlspecialchars(strip_tags($this->description));
+      $this->sanitizeProperties();
 
       // bind values
       $stmt->bindParam(":isbn", $this->isbn);

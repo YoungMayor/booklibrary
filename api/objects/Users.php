@@ -1,6 +1,7 @@
 <?php
 
 namespace Object;
+use \PDO;
 
 class Users{
   private $conn;

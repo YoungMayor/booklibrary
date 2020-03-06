@@ -23,7 +23,8 @@ if ($listStmt->rowCount() > 0){
     $bookList[] = [
       "book_id" => $id,
       "isbn" => $isbn,
-      "title" => $title
+      "title" => $title,
+      "available" => $in_stock
     ];
   }
 
