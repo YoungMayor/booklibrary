@@ -8,6 +8,8 @@ class Books{
   private $table_name = "books";
 
   public $id, $isbn, $title, $author, $description, $inStock, $invalidBook;
+  public $booksPerPage = 25;
+  public $page = 0;
   protected $bookDetails;
 
   public function __construct($db){
@@ -22,7 +24,11 @@ class Books{
   }
 
   public function listAvailable(){
-    $query = "SELECT * FROM {$this->table_name} WHERE in_stock > 0 ORDER BY id DESC";
+    $offset = ($this->page - 1) * $this->booksPerPage;
+    $offset =  ($offset < 0)? 0: $offset;
+    $count = $this->booksPerPage;
+
+    $query = "SELECT * FROM {$this->table_name} WHERE in_stock > 0 ORDER BY id DESC LIMIT {$offset} , {$count}";
 
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
