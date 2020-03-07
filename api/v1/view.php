@@ -19,7 +19,6 @@ $data = json_decode(file_get_contents("php://input")) ?? $_REQUEST;
 $bookObj = new Books($db);
 
 if( !empty($data['isbn']) ){
-
     // set product property values
   $bookObj->isbn = $data['isbn'];
 
@@ -27,20 +26,17 @@ if( !empty($data['isbn']) ){
   if($bookObj->bookExists()){
     http_response_code(200);
 
-    $response = [
+    echo json_encode([
       "book" => $bookObj->getBookDetails()
-    ];
-
-    echo json_encode($response);
+    ]);
   }else{
-    http_response_code(404);
+    http_response_code(200);
 
     echo json_encode(array("message" => "No book in record matches the given ISBN"));
   }
 } else {
-  http_response_code(503);
+  http_response_code(200);
 
-    // tell the user
   echo json_encode(array("message" => "Please pass the book's ISBN with the request"));
 }
 ?>

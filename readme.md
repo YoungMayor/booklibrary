@@ -21,6 +21,19 @@ No Authentication mechanism was built for this project
 
 # Error Codes
 Expected error codes include 404 and 503
+The following error codes would be returned dependant on the service failure received;
+
+LND-102 - A book could not be lended out (it exists and is in stock) or it was lent out but the stock failed to be reduced.
+
+LND-103 - Lending process could not be started, the book exist, the user exist as well, and there is another error.
+
+RET-102 - A book could not be returned or it was returned but the stock for that book did not increase
+
+RET-103 - Return of a book failed to execute and the reason is unknown
+
+
+NB: These errors are not ever supposed to occur. And it never occurred in production and testing, so debugging could not be made on them. However, it was neccessary to make appropriate preparations for them to avoid a system collapse
+
 
 # Rate limit
 There is no rate limmiting employed in use of this API

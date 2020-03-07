@@ -23,10 +23,19 @@ class Books{
     $this->description = htmlspecialchars(strip_tags($this->description));
   }
 
-  public function listAvailable(){
-    $offset = ($this->page - 1) * $this->booksPerPage;
+  protected function getNumberOnly($value){
+    if (isset($value) && is_numeric($value) && $value > 1){
+      return (integer) $value;
+    }else{
+      return null;
+    }
+  }
+
+  public function listAvailable($params = false){
+    $count = $this->getNumberOnly($params['size']?? $this->booksPerPage) ?? $this->booksPerPage;
+
+    $offset =  ($this->getNumberOnly($params['page'] ?? 0) - 1) * $count ?? 0;
     $offset =  ($offset < 0)? 0: $offset;
-    $count = $this->booksPerPage;
 
     $query = "SELECT * FROM {$this->table_name} WHERE in_stock > 0 ORDER BY id DESC LIMIT {$offset} , {$count}";
 

@@ -17,50 +17,66 @@ $db = $dbObj->getConnection();
 // get posted data
 $data = json_decode(file_get_contents("php://input")) ?? $_REQUEST;
 
-
 $bookObj = new Books($db);
 $userObj = new Users($db);
 $lendObj = new Lends($db);
 
-if( !empty($data['isbn']) && !empty($data['user']) ){
 
-  $bookObj->isbn = $data['isbn'];
-  $userObj->id = $data['user'];
-  $userObj->email = $data['user'];
+$bookObj->isbn = $data['isbn'] ?? false;
+$userObj->id = $data['user'] ?? false;
+$userObj->email = $data['user'] ?? false;
 
-  if ($bookObj->bookExists() && $userObj->userExists()){
-    if ($bookObj->inStock > 0){
-      $lendObj->bookID = $bookObj->id;
-      $lendObj->recipentID = $userObj->id;
+if ($bookObj->bookExists() && $userObj->userExists()){
+  if ($bookObj->inStock > 0){
+    $lendObj->bookID = $bookObj->id;
+    $lendObj->recipentID = $userObj->id;
 
-      if (!$lendObj->isOutstanding()){
-        if($lendObj->logLendOut() && $bookObj->reduceStock()){
-          http_response_code(201);
+    if (!$lendObj->isOutstanding()){
+      if($lendObj->logLendOut() && $bookObj->reduceStock()){
+        http_response_code(201);
 
-          $response = [
-            "message" => "Book '{$bookObj->title}' with ISBN {$bookObj->isbn} has been lent out to {$userObj->name}"
-          ];
-          echo json_encode($response);
-        }else{
-          http_response_code(503);
-
-          echo json_encode(array("message" => "Unexpected service failure!"));
-        }
+        echo json_encode([
+          "message" => "Book '{$bookObj->title}' with ISBN {$bookObj->isbn} has been lent out to {$userObj->name}"
+        ]);
       }else{
         http_response_code(503);
 
-        echo json_encode(array("message" => "User has already collected a copy of this book without returns"));
+        echo json_encode([
+          "message" => "Unexpected service failure!",
+          "error" => "LND-102"
+        ]);
       }
-
     }else{
-      echo json_encode(array("message" => "{$bookObj->title} is currently out of stock"));
-    }
-  } else if ($bookObj->invalidBook) {
-    http_response_code(400);
+      http_response_code(200);
 
-    echo json_encode(array("message" => "The Book does not exists"));
+      echo json_encode([
+        "message" => "User has already collected a copy of this book without returns"
+      ]);
+    }
+
   }else{
-    echo json_encode(array("message" => "User not registered"));
+    http_response_code(200);
+
+    echo json_encode(array("message" => "{$bookObj->title} is currently out of stock"));
   }
+} else if ($bookObj->invalidBook) {
+  http_response_code(200);
+
+  echo json_encode(array("message" => "The Book does not exists"));
+}else if (!$userObj->validUser){
+  http_response_code(200);
+
+  echo json_encode([
+    "message" => "User Not registered"
+  ]);
+
+}else{
+  http_response_code(503);
+
+  echo json_encode([
+    "message" => "Unexpected Service Failure",
+    "error" => "LND-103"
+  ]);
 }
+// }
 ?>

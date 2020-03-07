@@ -9,6 +9,7 @@ class Users{
 
   public $id, $name, $email, $roleRaw, $role, $createdAt;
   public $roleStr, $createdAtFMT;
+  public $validUser;
   protected $userDetails;
 
   public function __construct($db){
@@ -25,12 +26,13 @@ class Users{
     if ($stmt->rowCount()){
       $row = $stmt->fetch(PDO::FETCH_OBJ);
       $this->id = $row->id;
+      $this->validUser = true;
       $this->userDetails = $row;
       $this->setProperties();
-      return true;
     }else{
-      return false;
+      $this->validUser = false;
     }
+    return $this->validUser;
   }
 
   protected function setProperties($row = false){

@@ -22,37 +22,51 @@ $bookObj = new Books($db);
 $userObj = new Users($db);
 $lendObj = new Lends($db);
 
-if( !empty($data['isbn']) && !empty($data['user']) ){
+$bookObj->isbn = $data['isbn'] ?? false;
+$userObj->id = $data['user'] ?? false;
+$userObj->email = $data['user'] ?? false;
 
-  $bookObj->isbn = $data['isbn'];
-  $userObj->id = $data['user'];
-  $userObj->email = $data['user'];
+if ($bookObj->bookExists() && $userObj->userExists()){
+  $lendObj->bookID = $bookObj->id;
+  $lendObj->recipentID = $userObj->id;
 
-  if ($bookObj->bookExists() && $userObj->userExists()){
-    $lendObj->bookID = $bookObj->id;
-    $lendObj->recipentID = $userObj->id;
+  if ($lendObj->isOutstanding()){
 
-    if ($lendObj->isOutstanding()){
+    if($lendObj->logReturn() && $bookObj->increaseStock()){
+      http_response_code(201);
 
-      if($lendObj->logReturn() && $bookObj->increaseStock()){
-        http_response_code(201);
-
-        $response = [
-          "message" => "Book '{$bookObj->title}' with ISBN {$bookObj->isbn} has been returned by {$userObj->name}"
-        ];
-        echo json_encode($response);
-      }else{
-        http_response_code(503);
-
-        echo json_encode(array("message" => "Unexpected service failure!"));
-      }
+      echo json_encode([
+        "message" => "Book '{$bookObj->title}' with ISBN {$bookObj->isbn} has been returned by {$userObj->name}"
+      ]);
     }else{
       http_response_code(503);
 
-      echo json_encode(array("message" => "User holds no copy of this book"));
+      echo json_encode([
+        "message" => "Unexpected service failure!",
+        "error" => "RET-102"
+      ]);
     }
-  } else {
-    echo json_encode(array("message" => "User not registered"));
+  }else{
+    http_response_code(200);
+
+    echo json_encode(array("message" => "User holds no copy of this book"));
   }
+} else if ($bookObj->invalidBook) {
+  http_response_code(200);
+
+  echo json_encode(array("message" => "The Book does not exists"));
+}else if (!$userObj->validUser){
+  http_response_code(200);
+
+  echo json_encode([
+    "message" => "User Not registered"
+  ]);
+
+}else{
+  http_response_code(503);
+
+  echo json_encode([
+    "message" => "Unexpected Service Failure",
+    "error" => "RET-103"
+  ]);
 }
-?>

@@ -16,16 +16,7 @@ $db = $dbObj->getConnection();
 $data = json_decode(file_get_contents("php://input")) ?? $_REQUEST;
 $booksObj = new Books($db);
 
-
-if( isset($data['page']) ){
-  $booksObj->page = $data['page']--;
-}
-if( isset($data['size']) && is_numeric($data['size']) && $data['size'] > 1){
-  $booksObj->booksPerPage = $data['size'];
-}
-
-
-$listStmt = $booksObj->listAvailable();
+$listStmt = $booksObj->listAvailable($data ?? false);
 
 $bookList = [];
 if ($listStmt->rowCount() > 0){
