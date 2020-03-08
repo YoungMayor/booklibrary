@@ -6,11 +6,20 @@ He can add new books to the library as well
 
 # Overview
 The API was built using PHP, and Composer is needed for dependency management. So it requires you to have composer installed on your machine.
+
+
+# Setup
 To set up the project
 Copy the project to a location on your machine accessible by your local server.
-Create a database, and edit the Database Configuration located in api/configs/Database.php
+Edit your configurations located in api/config/configs.php
+If you cant find the configs file, copy and rename api/config/configs.example.php to api/config/configs.php
+On windows you can easily do this by running
+```
+composer set_winfig
+```
+Create a database
 Next create the tables and populate it with some dummy values, the queries can be found in setup/raw_queries.sql
-Next install composer from withinn the api directory by running
+Then install composer from withinn the api directory by running
 ```
 composer install
 ```
@@ -33,6 +42,15 @@ RET-103 - Return of a book failed to execute and the reason is unknown
 
 
 NB: These errors are not ever supposed to occur. And it never occurred in production and testing, so debugging could not be made on them. However, it was neccessary to make appropriate preparations for them to avoid a system collapse
+
+# Testing
+To run tests on the project, navigate to the api folder where composer was installed.
+Run
+```
+composer run_tests
+```
+The Tests require you to have accurately editted your configs.php as well as create the database and tables.
+Refer to Setup section above.
 
 
 # Rate limit

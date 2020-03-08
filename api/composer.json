@@ -5,9 +5,14 @@
   },
 
   "autoload": {
+    "files" : [
+      "config/setup_configs.php"
+    ],
+
     "psr-4": {
       "Object\\" : "objects/",
-      "Config\\" : "config/"
+      "Config\\" : "config/",
+      "Tests\\" : "tests/"
     }
   },
 
@@ -17,6 +22,7 @@
 
   "scripts": {
     "test_f": "/vendor/bin/phpunit",
-    "test_b": ".\\vendor\\bin\\phpunit"
+    "run_tests": ".\\vendor\\bin\\phpunit",
+    "set_winfig" : "echo && cd config && copy configs.example.php configs.php"
   }
 }

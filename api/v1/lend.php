@@ -33,7 +33,7 @@ if ($bookObj->bookExists() && $userObj->userExists()){
 
     if (!$lendObj->isOutstanding()){
       if($lendObj->logLendOut() && $bookObj->reduceStock()){
-        http_response_code(201);
+        http_response_code(200);
 
         echo json_encode([
           "message" => "Book '{$bookObj->title}' with ISBN {$bookObj->isbn} has been lent out to {$userObj->name}"
@@ -78,5 +78,4 @@ if ($bookObj->bookExists() && $userObj->userExists()){
     "error" => "LND-103"
   ]);
 }
-// }
 ?>

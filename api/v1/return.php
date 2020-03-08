@@ -33,7 +33,7 @@ if ($bookObj->bookExists() && $userObj->userExists()){
   if ($lendObj->isOutstanding()){
 
     if($lendObj->logReturn() && $bookObj->increaseStock()){
-      http_response_code(201);
+      http_response_code(200);
 
       echo json_encode([
         "message" => "Book '{$bookObj->title}' with ISBN {$bookObj->isbn} has been returned by {$userObj->name}"
